@@ -15,22 +15,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from items import views
+from items import views as itemsviews
 from django.conf import settings
 from django.conf.urls.static import static
+from api import views as apiviews
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('items/list/', views.item_list, name='item-list'),
-    path('items/detail/<int:item_id>/', views.item_detail, name='item-detail'),
-    path('items/wishlist/', views.wishlist, name='wishlist' ),
+    path('items/list/', itemsviews.item_list, name='item-list'),
+    path('items/detail/<int:item_id>/', itemsviews.item_detail, name='item-detail'),
+    path('items/wishlist/', itemsviews.wishlist, name='wishlist' ),
 
-    path('user/register/', views.user_register, name='user-register'),
-    path('user/login/', views.user_login, name='user-login'),
-    path('user/logout/', views.user_logout, name='user-logout'),
+    path('user/register/', itemsviews.user_register, name='user-register'),
+    path('user/login/', itemsviews.user_login, name='user-login'),
+    path('user/logout/', itemsviews.user_logout, name='user-logout'),
 
-    path('items/<int:item_id>/favorite/', views.item_favorite, name='item-favorite'),
+    path('items/<int:item_id>/favorite/', itemsviews.item_favorite, name='item-favorite'),
+
+    path('api/list/', apiviews.ItemListView.as_view(), name='item-list'),
+    path('api/detail/<int:object_id>/', apiviews.ItemDetailView.as_view(), name='item-detail'),
+
+    path('api/login/', TokenObtainPairView.as_view(), name='login'),
+
 ]
 
 urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
